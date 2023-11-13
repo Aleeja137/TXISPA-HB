@@ -7,9 +7,9 @@ n_pos: - cuántas posiciones hay en el eje menor
 El grid, en lugar de tener (scale*100,scale*200), o lo que es lo mismo, (scale*100,scale*100*2) dimensiones,
 a efectos prácticos tendrá (n_pos,n_pos*2) dimensiones
 */
-
-//scale, nconf, nchip, t_ext, tmax_chip, t_delta, max_iter, n_pos
-  12     4     4      20.0   160.0      0.01     10000     12
+//0      1      2      3          4        5         6
+//scale, nchip, t_ext, tmax_chip, t_delta, max_iter, n_pos
+  12     4      20.0   160.0      0.01     10000     12
 
 
 
