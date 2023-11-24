@@ -3,6 +3,9 @@
 
 # Implementación actual
 
+# Compilar código C como librería
+gcc -shared -o fitness.so -fPIC fitness.c diffusion.c faux.c -lrt
+
 # TODO
 Cambiar función C para que obtenga una lista de posiciones en lugar de un fichero (read_data e init_grid_chips)
 Pasar todo a np.arrays
