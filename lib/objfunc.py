@@ -33,6 +33,8 @@ def fitness_heat(objective_function_HEAT, filepath, instance, solucion, salida =
     t_delta = ctypes.c_float(t_delta)
     max_iter_value = ctypes.c_int(max_iter)
     
+    print("chip_info",chip_info)
+    print("solucion",solucion)
     # Crear arrays de ctypes para chip_info y solucion
     chip_info_array = (ctypes.c_int * len(chip_info))(*chip_info)
     solucion_array = (ctypes.c_int * len(solucion))(*solucion)

@@ -34,14 +34,15 @@
 void init_grid_chips (int conf, struct info_param param, struct info_chips *chips, int **chip_coord, float *grid_chips)
 {
   int i, j, n;
-  // printf("C debug 9.1\n");
+  // // printf("C debug 9.1\n");
 
   for (i=0; i<NROW; i++)
   for (j=0; j<NCOL; j++)  
     grid_chips[i*NCOL+j] = param.t_ext;
 
-  // printf("C debug 9.2\n");
+  // // printf("C debug 9.2\n");
   // printf("param.chip: %i\n",param.nchip);
+  printf("param.nchip: %i\n",param.nchip);
   for (n=0; n<param.nchip; n++)
   for (i = chip_coord[conf][2*n]   * param.scale; i < (chip_coord[conf][2*n] + chips[n].h) * param.scale; i++)
   for (j = chip_coord[conf][2*n+1] * param.scale; j < (chip_coord[conf][2*n+1]+chips[n].w) * param.scale; j++) 
@@ -50,7 +51,7 @@ void init_grid_chips (int conf, struct info_param param, struct info_chips *chip
     grid_chips[(i+1)*NCOL+(j+1)] = chips[n].tchip;
   }
   
-  // printf("C debug 9.3\n");
+  // // printf("C debug 9.3\n");
 }
 
 /************************************************************************************/
@@ -79,16 +80,12 @@ int fitness (int save_results, char * card_file, int scale, int nchip, float t_e
   double tej, Tmean;
   // printf("-------C--------\n");
   // printf("Save results: %i\nscale: %i\nnchip: %i\nt_ext: %f\ntmax_chip: %f\nt_delta: %f\n",save_results,scale,nchip,t_ext,tmax_chip,t_delta);
-  // clock_gettime (CLOCK_REALTIME, &t0);
-  // for (i = 0; i < nchip;i++){
-  //   printf("Chip %i size: (%i,%i), position (%i,%i)\n",i,chip_info[2*i],chip_info[2*i+1],chip_positions[2*i],chip_positions[2*i+1]);
-  // }
+  clock_gettime (CLOCK_REALTIME, &t0);
   
   // printf("max_iter: %i\n",max_iter);
   // printf("----------------\n");
   read_data (scale, nchip,t_ext,tmax_chip,t_delta,max_iter,chip_info,chip_positions,&param,&chips,&chip_coord);
   // printf("C debug 8\n");
-  // read_data (card_file, &param, &chips, &chip_coord);
   
   grid = malloc(NROW*NCOL * sizeof(float));
   grid_chips = malloc(NROW*NCOL * sizeof(float));
@@ -111,7 +108,7 @@ int fitness (int save_results, char * card_file, int scale, int nchip, float t_e
 
   clock_gettime (CLOCK_REALTIME, &t1);
 
-  if (save_results)
+  if (save_results == 1)
   {
     // Processing configuration results 
     results_conf (Tmean, param, grid, grid_chips, &BT);
@@ -119,18 +116,78 @@ int fitness (int save_results, char * card_file, int scale, int nchip, float t_e
     // writing best configuration results
     results (param, &BT, card_file);
   }
+
+  // printf("C debug 13\n");
   
   tej = (t1.tv_sec - t0.tv_sec) + (t1.tv_nsec - t0.tv_nsec)/(double)1e9;  
   *Tmean_out = Tmean;
   *Tej_out = tej;
   // printf ("Tmean: %1.2f\n", Tmean);
   // printf ("Time: %1.3f s\n", tej);
+  for (i = 0; i < nchip;i++){
+    printf("Chip %i size: (%i,%i), position (%i,%i) \n",i,(chips)[i].h,(chips)[i].w,chip_positions[2*i],chip_positions[2*i+1]);
+  }
 
-  free (grid);free (grid_chips);free (grid_aux);
-  free (BT.bgrid);free (BT.cgrid);
-  free (chips);
-  free (chip_coord);
+  // printf("C debug 13.2\n");
+  if (grid != NULL){
+    free (grid);}
+  // printf("C debug 14\n");
+  if (grid_chips != NULL){
+    free (grid_chips);}
+  // printf("C debug 15\n");
+  if (grid_aux != NULL){
+    free (grid_aux);}
+  // printf("C debug 16\n");
+  if (BT.bgrid != NULL){
+    free (BT.bgrid);}
+  // printf("C debug 17\n");
+  if (BT.cgrid != NULL){
+    free (BT.cgrid);}
+  // printf("C debug 18\n");
+  if (chips != NULL){
+    free (chips);}
+  // printf("C debug 19\n");
+  if (chip_coord != NULL){
+    free (chip_coord);}
+  // printf("C debug 20\n");
 
   return (0);
 }
 
+
+
+int main() {
+    int save_results = 0;  // Puedes ajustar este valor según tus necesidades
+    char card_file[] = "";  // Nombre del archivo de salida, puedes cambiarlo
+    int scale = 10;  // Puedes ajustar este valor según tus necesidades
+    int nchip = 6;  // Puedes ajustar este valor según tus necesidades
+    float t_ext = 20.0;  // Puedes ajustar este valor según tus necesidades
+    float tmax_chip = 160.0;  // Puedes ajustar este valor según tus necesidades
+    float t_delta = 0.01;  // Puedes ajustar este valor según tus necesidades
+    int max_iter = 10;  // Puedes ajustar este valor según tus necesidades
+
+    // Valores ficticios para chip_info y chip_positions, debes ajustarlos según tus necesidades
+    int chip_info[] = {20,30,40,40,50,10,15,60,25,35,43,50};
+    int chip_positions[] = {356,78,32,155,46,131,272,39,299,152,167,61};
+
+    double Tmean_out, Tej_out;
+
+    int num_iterations = 1;  // Número de veces que deseas repetir la llamada a la función
+
+    for (int iteration = 0; iteration < num_iterations; ++iteration) {
+        // Llamada a la función fitness
+        int result = fitness(save_results, card_file, scale, nchip, t_ext, tmax_chip, t_delta, max_iter, chip_info, chip_positions, &Tmean_out, &Tej_out);
+
+        // Imprimir resultados si es necesario
+        printf("Iteración %d:\n", iteration + 1);
+        printf("Resultado de la función fitness: %d\n", result);
+        printf("Tmean: %1.2f\n", Tmean_out);
+        printf("Tej: %1.3f s\n", Tej_out);
+        printf("\n");
+
+        // Puedes agregar un pequeño retardo entre las iteraciones si es necesario
+        // usleep(1000000);  // Espera de 1 segundo (1,000,000 microsegundos)
+    }
+
+    return 0;
+}

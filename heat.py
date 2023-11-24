@@ -1,4 +1,5 @@
 import sys
+import time as tm
 sys.path.append("lib")
 import lib.io
 import lib.check
@@ -57,10 +58,12 @@ def probar_vecindades():
     #     visualizar_solucion(elem)  
 
 def probar_random_search():
-    best_sol_value, best_sol_codif, total_time = lib.busquedas.random_search(instance,10)
+    time1 = tm.time()
+    best_sol_value, best_sol_codif, _ = lib.busquedas.random_search(instance,10000)
+    time2 = tm.time()
     print("Best fitness:",best_sol_value)
     print("Best fitness codif:",best_sol_codif)
-    print("Total time:",total_time)
+    print("Total time:",time2-time1)
     lib.visualize.visualizar_solucion(instance,best_sol_codif)
     
 def probar_best_first():
@@ -85,5 +88,6 @@ def probar_best_first():
 # ejec_sol_inicial()
 # probar_rand_sol()
 # probar_vecindades()
-# probar_random_search()
-probar_best_first()
+probar_random_search()
+# probar_best_first()
+

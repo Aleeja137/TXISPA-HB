@@ -13,7 +13,8 @@ def random_search(instance, num_solutions) -> list:
     sol_actual_codif = best_sol_codif.copy()
     sol_actual_value = best_sol_value
 
-    for _ in range(num_solutions):
+    for i in range(num_solutions):
+        print("Solution",i)
         sol_actual_codif = solutions.random_solution(instance)
         _, sol_actual_value, sol_actual_time = objfunc.fitness_heat(fitness_lib,"",instance,sol_actual_codif,salida=False)
         total_time += sol_actual_time
@@ -50,6 +51,7 @@ def best_first_move(instance, candidato, fitness_candidato, max_eval, n_eval):
             if (iter_count > max_eval):
                 break
             # Se calcula el fitness de uno de los vecinos
+            # print("Vecino",sol_ind," es",vecindad[sol_ind])
             _,new_fitness,new_time = objfunc.fitness_heat(objective_function_HEAT,"",instance,vecindad[sol_ind])
             total_time += new_time
             iter_count = iter_count + 1
@@ -68,3 +70,6 @@ def best_first_move(instance, candidato, fitness_candidato, max_eval, n_eval):
     best_fitness = current_fitness
     best_solution = current_sol
     return best_fitness,best_solution,iter_count, total_time
+
+def local_search(instance,max_eval):
+    return 1
