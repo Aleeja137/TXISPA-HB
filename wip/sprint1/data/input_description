@@ -1,0 +1,58 @@
+/* Restricciones
+n_pos: - cuántas posiciones hay en el eje menor
+       - scale*100 es el tamaño del eje menor
+       - n_pos debe ser un divisor entero de (scale*100).
+       - Si n_pos = (scale*100), tenemos el problema sin relajar
+
+El grid, en lugar de tener (scale*100,scale*200), o lo que es lo mismo, (scale*100,scale*100*2) dimensiones,
+a efectos prácticos tendrá (n_pos,n_pos*2) dimensiones
+*/
+//0      1      2      3          4        5         6
+//scale, nchip, t_ext, tmax_chip, t_delta, max_iter, n_pos
+  12     4      20.0   160.0      0.01     10000     12
+
+
+
+// Una línea por chip, nchip líneas
+// h_scale: - número de posiciones que toma el chip en vertical
+//          - debe ser menor a 2*n_pos
+// w_scale: - número de posiciones que toma el chip en horizontal
+//          - debe ser menor a n_pos
+// tchip = temperatura del chip, se inicializa con esta temperatura, después se multiplica con 0.05 y se suma en las posiciones donde hay chip
+//h    w   tchip
+  2    1  100.0
+  1    1  160.0
+  1    2  120.0
+  2    2  135.0
+
+// Un bloque de nchip líneas por cada configuración, nconf bloques
+// En cada línea de un bloque, tenemos las coordenadas (x,y), que corresponden a 
+// Cada chip ocupa x+h en vertical hacia abajo e y+w en horizontal hacia la derecha
+// Si rotamos la placa, tenemos un x+h normal en el eje x hacia la derecha, un y+w normal en el eje y hacia arriba
+
+// Con n_pos, eltamaño de cada posición viene dado con div(n_pos,scale*100) = tam
+//  x: - Posición en la que comienza el eje vertical del chip.
+//     - x_real = x*tam; x_real es la posición real en el grid
+//     - x <= 2*n_pos - h 
+//  y: - Posición en la que comienza el eje horizontal del chip.
+//     - y_real = y*tam; y_real es la posición real en el grid
+//     - y <= n_pos - w
+    2   1 
+    4   1 
+    6   3 
+    6   8 
+
+    2   1 
+    6   3
+    4   1  
+    6   8 
+
+    4   1
+    2   1  
+    6   8 
+    6   3 
+
+    2   1 
+    6   3
+    6   8 
+    4   1  
