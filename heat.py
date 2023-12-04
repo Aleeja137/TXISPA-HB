@@ -57,16 +57,16 @@ def probar_vecindades():
     # for elem in vecindad_2[0]:
     #     visualizar_solucion(elem)  
 
-def probar_random_search():
+def probar_random_search(verbose = False):
     time1 = tm.time()
-    best_sol_value, best_sol_codif, _ = lib.busquedas.random_search(instance,10000)
+    best_sol_value, best_sol_codif, _ = lib.busquedas.random_search(instance,100, verbose)
     time2 = tm.time()
     print("Best fitness:",best_sol_value)
     print("Best fitness codif:",best_sol_codif)
     print("Total time:",time2-time1)
     lib.visualize.visualizar_solucion(instance,best_sol_codif)
     
-def probar_best_first():
+def probar_best_first(verbose = False):
     # Preparar los datos
     fitness_lib = lib.objfunc.initialize_fitness()
     candidato = lib.solutions.random_solution(instance)
@@ -75,7 +75,7 @@ def probar_best_first():
     n_eval = 1
 
     # Hacer la búsqueda local
-    best_sol_value, best_sol_codif, iter_count, total_time = lib.busquedas.best_first_move(instance,candidato,fitness_candidato,max_eval,n_eval)
+    best_sol_value, best_sol_codif, iter_count, total_time = lib.busquedas.best_first_move(instance,candidato,fitness_candidato,max_eval,n_eval,verbose)
 
     # Comprobar los resultados
     print("Best fitness:",best_sol_value)
@@ -88,6 +88,6 @@ def probar_best_first():
 # ejec_sol_inicial()
 # probar_rand_sol()
 # probar_vecindades()
-probar_random_search()
-# probar_best_first()
+# probar_random_search(verbose=True)
+probar_best_first(verbose=True)
 

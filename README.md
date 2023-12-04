@@ -25,7 +25,13 @@ Función objetivo secundaria (wirelength) para pareto (parecido al lab)
 VNS ya que la temperatura media cambia poco con vecindad move_1  
 Simulated annealing para Insertar individuos aleatorios (parecido al lab)  
 
-## mejoras secundarias  
+## Mejoras secundarias  
 Visualizar recorrido en las búsquedas (vídeo/GIF)  
 Visualizar zonas de enfriamiento  
 Visualizar calor placa cada iteración con el mejor candidato  
+
+# Debugging  
+conda activate /path/to/HB-env
+cd source
+gcc -o fitness  fitness.c diffusion.c faux.c 
+valgrind -v --leak-check=full ./fitness

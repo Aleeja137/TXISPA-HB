@@ -34,24 +34,37 @@
 void init_grid_chips (int conf, struct info_param param, struct info_chips *chips, int **chip_coord, float *grid_chips)
 {
   int i, j, n;
-  // // printf("C debug 9.1\n");
+  // printf("C debug 9.1\n");
 
   for (i=0; i<NROW; i++)
   for (j=0; j<NCOL; j++)  
     grid_chips[i*NCOL+j] = param.t_ext;
 
-  // // printf("C debug 9.2\n");
+  // printf("C debug 9.2\n");
   // printf("param.chip: %i\n",param.nchip);
-  printf("param.nchip: %i\n",param.nchip);
+  // printf("C debug - param.nchip: %i\n",param.nchip);
   for (n=0; n<param.nchip; n++)
-  for (i = chip_coord[conf][2*n]   * param.scale; i < (chip_coord[conf][2*n] + chips[n].h) * param.scale; i++)
-  for (j = chip_coord[conf][2*n+1] * param.scale; j < (chip_coord[conf][2*n+1]+chips[n].w) * param.scale; j++) 
   {
-    // printf("chips %i tchip: %f\n",n,chips[n].tchip);
-    grid_chips[(i+1)*NCOL+(j+1)] = chips[n].tchip;
-  }
-  
-  // // printf("C debug 9.3\n");
+    // printf("chip n : %i\n chip_coord[conf][2*n]: %i, limit: %i\n chip_coord[conf][2*n+1]: %d, limit: %i\n",n, chip_coord[conf][2*n]*param.scale, (chip_coord[conf][2*n] + chips[n].h)*param.scale, chip_coord[conf][2*n+1]*param.scale, (chip_coord[conf][2*n+1]+chips[n].w) * param.scale);
+    // for (i = chip_coord[conf][2*n]   * param.scale; i < (chip_coord[conf][2*n] + chips[n].h) * param.scale; i++)
+    // {
+    //   for (j = chip_coord[conf][2*n+1] * param.scale; j < (chip_coord[conf][2*n+1]+chips[n].w) * param.scale; j++) 
+    //   {
+    //     // printf("chips %i tchip: %f\n",n,chips[n].tchip);
+    //     grid_chips[(i+1)*NCOL+(j+1)] = chips[n].tchip;
+    //   }
+    // }
+    // printf("C debug - chip n : %i\n chip_coord[conf][2*n]: %i, limit: %i\n chip_coord[conf][2*n+1]: %d, limit: %i\n",n, chip_coord[conf][2*n], (chip_coord[conf][2*n] + chips[n].h), chip_coord[conf][2*n+1], (chip_coord[conf][2*n+1]+chips[n].w));
+    for (i = chip_coord[conf][2*n]; i < (chip_coord[conf][2*n] + chips[n].h); i++)
+    {
+      for (j = chip_coord[conf][2*n+1]; j < (chip_coord[conf][2*n+1]+chips[n].w); j++) 
+      {
+        // printf("chips %i tchip: %f\n",n,chips[n].tchip);
+        grid_chips[(i+1)*NCOL+(j+1)] = chips[n].tchip;
+      }
+    }
+  }  
+  // printf("C debug 9.3\n");
 }
 
 /************************************************************************************/
@@ -88,6 +101,7 @@ int fitness (int save_results, char * card_file, int scale, int nchip, float t_e
   // printf("C debug 8\n");
   
   grid = malloc(NROW*NCOL * sizeof(float));
+  // printf("C debug - Size of grid is (%i,%i)\n",NROW,NCOL);
   grid_chips = malloc(NROW*NCOL * sizeof(float));
   grid_aux = malloc(NROW*NCOL * sizeof(float));
 
@@ -125,7 +139,7 @@ int fitness (int save_results, char * card_file, int scale, int nchip, float t_e
   // printf ("Tmean: %1.2f\n", Tmean);
   // printf ("Time: %1.3f s\n", tej);
   for (i = 0; i < nchip;i++){
-    printf("Chip %i size: (%i,%i), position (%i,%i) \n",i,(chips)[i].h,(chips)[i].w,chip_positions[2*i],chip_positions[2*i+1]);
+    // printf("C debug - Chip %i size: (%i,%i), position (%i,%i) \n",i,(chips)[i].h,(chips)[i].w,chip_positions[2*i],chip_positions[2*i+1]);
   }
 
   // printf("C debug 13.2\n");

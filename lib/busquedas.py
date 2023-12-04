@@ -2,7 +2,7 @@ import solutions
 import objfunc
 import vecindades
 
-def random_search(instance, num_solutions) -> list:
+def random_search(instance, num_solutions, verbose = False) -> list:
     scale,nconf,nchip,max_iter,n_pos,t_ext,tmax_chip,t_delta,tam,chip_info = instance
     # print("Debug 1: Pre initialize")
     fitness_lib = objfunc.initialize_fitness()
@@ -14,7 +14,8 @@ def random_search(instance, num_solutions) -> list:
     sol_actual_value = best_sol_value
 
     for i in range(num_solutions):
-        print("Solution",i)
+        if verbose and i%10==0:
+            print("Iteration:",i)
         sol_actual_codif = solutions.random_solution(instance)
         _, sol_actual_value, sol_actual_time = objfunc.fitness_heat(fitness_lib,"",instance,sol_actual_codif,salida=False)
         total_time += sol_actual_time
@@ -27,11 +28,10 @@ def random_search(instance, num_solutions) -> list:
 
     return best_sol_value,best_sol_codif, total_time
 
-def best_first_move(instance, candidato, fitness_candidato, max_eval, n_eval):
+def best_first_move(instance, candidato, fitness_candidato, max_eval, n_eval, verbose = False):
     scale,nconf,nchip,max_iter,n_pos,t_ext,tmax_chip,t_delta,tam,chip_info = instance
     current_sol = candidato.copy()
     current_fitness = fitness_candidato
-
     objective_function_HEAT = objfunc.initialize_fitness()
     iter_count = n_eval
     mejora = True
@@ -50,6 +50,8 @@ def best_first_move(instance, candidato, fitness_candidato, max_eval, n_eval):
         while sol_ind < len(vecindad) and not encontrado:
             if (iter_count > max_eval):
                 break
+            if verbose and iter_count%10==0:
+                print("Iteration:",iter_count)
             # Se calcula el fitness de uno de los vecinos
             # print("Vecino",sol_ind," es",vecindad[sol_ind])
             _,new_fitness,new_time = objfunc.fitness_heat(objective_function_HEAT,"",instance,vecindad[sol_ind])
