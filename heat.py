@@ -10,7 +10,7 @@ import lib.visualize
 import lib.busquedas
 
 # Probar io
-input_filepath = "data/input1"
+input_filepath = "data/input2"
 instance, initial_solution = lib.io.read_params(input_filepath)
     
 # Ejecución con solución inicial
@@ -59,7 +59,7 @@ def probar_vecindades():
 
 def probar_random_search(verbose = False):
     time1 = tm.time()
-    best_sol_value, best_sol_codif, _ = lib.busquedas.random_search(instance,100, verbose)
+    best_sol_value, best_sol_codif, _ = lib.busquedas.random_search(instance,10, verbose)
     time2 = tm.time()
     print("Best fitness:",best_sol_value)
     print("Best fitness codif:",best_sol_codif)
@@ -89,5 +89,6 @@ def probar_best_first(verbose = False):
 # probar_rand_sol()
 # probar_vecindades()
 # probar_random_search(verbose=True)
-probar_best_first(verbose=True)
+# probar_best_first(verbose=True)
+lib.solutions.constructive_solution(instance)
 

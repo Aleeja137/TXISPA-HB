@@ -12,7 +12,7 @@ def read_params(filepath):
     nchip    = int(params[1])
     max_iter = int(params[5])
     n_pos    = int(params[6])
-    nconf    = 1
+    nconf    = 1 # Por ahora solo procesa una única solución
     t_ext     = float(params[2])
     tmax_chip = float(params[3])
     t_delta   = float(params[4])
