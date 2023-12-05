@@ -1,77 +1,53 @@
 import solutions
 import objfunc
 import vecindades
+import neighbor_selector
 
-def random_search(instance, num_solutions, verbose = False) -> list:
-    scale,nconf,nchip,max_iter,n_pos,t_ext,tmax_chip,t_delta,tam,chip_info = instance
-    # print("Debug 1: Pre initialize")
-    fitness_lib = objfunc.initialize_fitness()
-    
-    best_sol_codif = solutions.random_solution(instance)
-    _, best_sol_value, total_time = objfunc.fitness_heat(fitness_lib,"",instance,best_sol_codif,salida=False)
-
-    sol_actual_codif = best_sol_codif.copy()
-    sol_actual_value = best_sol_value
-
-    for i in range(num_solutions):
-        if verbose and i%10==0:
-            print("Iteration:",i)
-        sol_actual_codif = solutions.random_solution(instance)
-        _, sol_actual_value, sol_actual_time = objfunc.fitness_heat(fitness_lib,"",instance,sol_actual_codif,salida=False)
-        total_time += sol_actual_time
-        # print(sol_actual_value)
-        if sol_actual_value <= best_sol_value:
-            best_sol_value = sol_actual_value
-            best_sol_codif = sol_actual_codif
-            # print(best_sol_codif)
-            # print(best_sol_value)
-
-    return best_sol_value,best_sol_codif, total_time
-
-def best_first_move(instance, candidato, fitness_candidato, max_eval, n_eval, verbose = False):
-    scale,nconf,nchip,max_iter,n_pos,t_ext,tmax_chip,t_delta,tam,chip_info = instance
-    current_sol = candidato.copy()
-    current_fitness = fitness_candidato
-    objective_function_HEAT = objfunc.initialize_fitness()
-    iter_count = n_eval
+def local_search(instance, initial_solution_function, max_eval, neighbor_selector_function, vecindad_function, max_time, verbose = False):
+        
+    if verbose:
+        print("Función para solución inicial elegida: {}\n"
+              "Función para generar vecindad elegida: {}\n"
+              "Función para elegir vecino siguiente elegida: {}\n"
+              .format(initial_solution_function.__name__,vecindad_function.__name__,neighbor_selector_function.__name__))
+        
+    # Obtener solución inicial
+    initial_sol = initial_solution_function(instance)
     mejora = True
-    total_time = 0
+    
+    # Calcular punto de partida
+    fitness_lib = objfunc.initialize_fitness()
+    _, fitness_value, fitness_time = objfunc.fitness_heat(fitness_lib,"",instance,initial_sol)
+    n_eval = 1
+    
+    current_sol = initial_sol
+    current_fitness = fitness_value
+    total_time = fitness_time
+    
+    # Mientras no sobrepasen las iteraciones, se encuentre mejora o no se sobrepase el tiempo de ejecución
+    while n_eval < max_eval and mejora and total_time < max_time:
+        
+        if verbose:
+            print("Evaluations used: {}, time used: {}, best_fitness: {}".format(n_eval,round(total_time,2),current_fitness))
+            
+        # Se obtiene la vecindad según función elegida
+        vecindad = vecindad_function(instance,current_sol)
 
-    # Mientras no sobrepasen las iteraciones o se encuentre mejora
-    while (iter_count < max_eval and mejora):
-        # Se obtiene la vecindad
-        vecindad = vecindades.move_1(instance,current_sol)
-
-        # Se recorren los vecinos hasta encontrar uno con mejor solucion
-        sol_ind = 0
-        encontrado = False
-
-        # Se recorren los vecinos hasta encontrar el primero que mejore la función fitness
-        while sol_ind < len(vecindad) and not encontrado:
-            if (iter_count > max_eval):
-                break
-            if verbose and iter_count%10==0:
-                print("Iteration:",iter_count)
-            # Se calcula el fitness de uno de los vecinos
-            # print("Vecino",sol_ind," es",vecindad[sol_ind])
-            _,new_fitness,new_time = objfunc.fitness_heat(objective_function_HEAT,"",instance,vecindad[sol_ind])
-            total_time += new_time
-            iter_count = iter_count + 1
-            # Si mejora el fitness se sigue ese camino
-            if (new_fitness < current_fitness):
-                print("Fitness mejorado de {} a {}".format(current_fitness,new_fitness))
-                current_fitness = new_fitness
-                current_sol = vecindad[sol_ind].copy()
-                encontrado = True
-            sol_ind = sol_ind + 1
-
+        # Se recorren los vecinos según función elegida
+        encontrado,used_eval,best_fitness,best_candidato,used_time = neighbor_selector_function(instance,vecindad,n_eval,max_eval,current_sol,current_fitness,fitness_lib)
+        
+        total_time += used_time
+        n_eval     += used_eval
+        
         # Si no se ha encontrado un vecino que mejore, no merece seguir buscando
         if not encontrado:
             mejora = False
+        # Si se ha encontrado un mejor vecino, se sigue por ese
+        else:
+            current_sol = best_candidato
+            current_fitness = best_fitness
 
-    best_fitness = current_fitness
-    best_solution = current_sol
-    return best_fitness,best_solution,iter_count, total_time
-
-def local_search(instance,max_eval):
-    return 1
+    if verbose:
+        print("Ejecución terminada!\nEvaluations used: {}, time used: {}, best_fitness: {}".format(n_eval,round(total_time,2),current_fitness))
+            
+    return current_fitness,current_sol,n_eval,total_time

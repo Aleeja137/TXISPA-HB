@@ -81,8 +81,8 @@ def constructive_solution(instance):
         # Incrementar los chips colocados
         chips_added += 1
         
-    print(solution)
-    visualize.visualizar_solucion(instance,solution)
+    # print(solution)
+    # visualize.visualizar_solucion(instance,solution)
     if check.valid_solution(instance,solution):
         return solution
     else:

@@ -8,6 +8,7 @@ import lib.solutions
 import lib.vecindades
 import lib.visualize
 import lib.busquedas
+import lib.neighbor_selector
 
 # Probar io
 input_filepath = "data/input2"
@@ -66,29 +67,25 @@ def probar_random_search(verbose = False):
     print("Total time:",time2-time1)
     lib.visualize.visualizar_solucion(instance,best_sol_codif)
     
-def probar_best_first(verbose = False):
-    # Preparar los datos
-    fitness_lib = lib.objfunc.initialize_fitness()
-    candidato = lib.solutions.random_solution(instance)
-    _,fitness_candidato,time_candidato = lib.objfunc.fitness_heat(fitness_lib,"",instance,candidato,False)
-    max_eval = 1000
-    n_eval = 1
-
-    # Hacer la búsqueda local
-    best_sol_value, best_sol_codif, iter_count, total_time = lib.busquedas.best_first_move(instance,candidato,fitness_candidato,max_eval,n_eval,verbose)
-
-    # Comprobar los resultados
-    print("Best fitness:",best_sol_value)
-    print("Best fitness codif:",best_sol_codif)
-    print("Iterations used:",iter_count)
-    print("Total time:",total_time)
-    lib.visualize.visualizar_solucion(instance,best_sol_codif)
+def probar_neighbor_selectors():
     
+    rand_sol = lib.solutions.random_solution(instance)
+    print("Solución inicial aleatoria:",rand_sol)
+
+    vecindad_1 = lib.vecindades.move_1(instance,rand_sol)
+    print("Size of vecindad:",len(vecindad_1))
+    fitness_lib = lib.objfunc.initialize_fitness()
+    result_valid, fitness_value, fitness_time = lib.objfunc.fitness_heat(fitness_lib,"",instance,rand_sol)
+    print("Rand sol fitness:",fitness_value)
+    print("Best first  :",lib.neighbor_selector.best_first  (instance,vecindad_1,1,1000,rand_sol,fitness_value,fitness_lib))
+    print("Best greedy :",lib.neighbor_selector.best_greedy (instance,vecindad_1,1,1000,rand_sol,fitness_value,fitness_lib))
+    print("Random neigh:",lib.neighbor_selector.random_neigh(instance,vecindad_1,1,1000,rand_sol,fitness_value,fitness_lib))
     
 # ejec_sol_inicial()
 # probar_rand_sol()
 # probar_vecindades()
 # probar_random_search(verbose=True)
-# probar_best_first(verbose=True)
-lib.solutions.constructive_solution(instance)
+# lib.solutions.constructive_solution(instance)
+# probar_neighbor_selectors()
 
+lib.busquedas.local_search(instance,lib.solutions.constructive_solution,10000000,lib.neighbor_selector.best_first,lib.vecindades.move_1,18000,True)
