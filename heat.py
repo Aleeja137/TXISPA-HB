@@ -88,4 +88,5 @@ def probar_neighbor_selectors():
 # lib.solutions.constructive_solution(instance)
 # probar_neighbor_selectors()
 
-lib.busquedas.local_search(instance,lib.solutions.constructive_solution,10000000,lib.neighbor_selector.best_first,lib.vecindades.move_1,18000,True)
+# lib.busquedas.local_search(instance,lib.solutions.constructive_solution,10000000,lib.neighbor_selector.best_first,lib.vecindades.move_1,18000,True)
+lib.busquedas.local_beam_search(instance,lib.solutions.random_solution,1000000,5,lib.vecindades.move_1,3600,True)
