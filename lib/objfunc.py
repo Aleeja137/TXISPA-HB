@@ -1,4 +1,5 @@
 import ctypes
+import numpy as np
 
 def initialize_fitness():
     # Cargar la librería 
@@ -60,3 +61,6 @@ def fitness_heat(objective_function_HEAT, filepath, instance, solucion, salida =
     )
     
     return resultado,Tmean.value,Tej.value
+
+def manhattan_distance(solution):
+    return np.sum(solution)
