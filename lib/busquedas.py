@@ -64,7 +64,7 @@ def local_beam_search (instance, initial_solution_function, max_eval, N, vecinda
     # Obtener soluciones iniciales
     initial_solutions = [initial_solution_function(instance) for i in range(N)]
     mejora = True
-    print("initial_solutions:",initial_solutions)
+    # print("initial_solutions:",initial_solutions)
 
     # Calcular puntos de partida
     current_fitnesses = np.empty(N)
@@ -79,10 +79,10 @@ def local_beam_search (instance, initial_solution_function, max_eval, N, vecinda
     
     n_eval = N
         
-    print("current_solutions:",current_solutions)
-    print("current_fitnesses:",current_fitnesses)
-    print("n_eval:",n_eval)
-    print("total_time:",total_time)    
+    # print("current_solutions:",current_solutions)
+    # print("current_fitnesses:",current_fitnesses)
+    # print("n_eval:",n_eval)
+    # print("total_time:",total_time)    
     
     # Mientras no sobrepasen las iteraciones, se encuentre mejora o no se sobrepase el tiempo de ejecución
     while n_eval < max_eval and mejora and total_time < max_time:
@@ -96,9 +96,9 @@ def local_beam_search (instance, initial_solution_function, max_eval, N, vecinda
             vecindad_i = vecindad_function(instance,current_solutions[i])
             vecindad = np.concatenate([vecindad,vecindad_i])
         
-        print("vecindad PRE prune {}:\n{}".format(len(vecindad),vecindad))
+        # print("vecindad PRE prune {}:\n{}".format(len(vecindad),vecindad))
         vecindad = np.unique(vecindad, axis=0)
-        print("vecindad POST prune {}:\n{}".format(len(vecindad),vecindad))
+        # print("vecindad POST prune {}:\n{}".format(len(vecindad),vecindad))
 
         # Se aplica la función objetivo sobre cada vecino
         vecindad_fitnesses = np.empty(len(vecindad))
@@ -112,41 +112,42 @@ def local_beam_search (instance, initial_solution_function, max_eval, N, vecinda
             vecindad_fitnesses[i] = fitness_value
             
         n_eval += len(vecindad)
-        print("vecindad_fitnesses:\n",vecindad_fitnesses)
-        print("n_eval:",n_eval)
-        print("total_time:",total_time)
+        # print("vecindad_fitnesses:\n",vecindad_fitnesses)
+        # print("n_eval:",n_eval)
+        # print("total_time:",total_time)
         
         # Se cogen los N mejores y se añaden a los actuales
         ordered_indexes = np.argsort(vecindad_fitnesses)
-        print("ordered_indexes from new:\n",ordered_indexes)
+        # print("ordered_indexes from new:\n",ordered_indexes)
         new_current_solutions = current_solutions
         new_current_fitnesses = current_fitnesses
-        print("new_current_solutions PRE:\n",new_current_solutions)
-        print("new_current_fitnesses PRE:\n",new_current_fitnesses)
+        # print("new_current_solutions PRE:\n",new_current_solutions)
+        # print("new_current_fitnesses PRE:\n",new_current_fitnesses)
         new_current_solutions = np.concatenate([new_current_solutions,vecindad[ordered_indexes[0:N]]])
         new_current_fitnesses = np.concatenate([new_current_fitnesses,vecindad_fitnesses[ordered_indexes[0:N]]])
-        print("new_current_solutions POST\n:",new_current_solutions)
-        print("new_current_fitnesses POST\n:",new_current_fitnesses)
+        # print("new_current_solutions POST\n:",new_current_solutions)
+        # print("new_current_fitnesses POST\n:",new_current_fitnesses)
         
         
         # Se cogen los N mejores de la unión
         ordered_indexes = np.argsort(new_current_fitnesses)
-        print("ordered_indexes from new added:",ordered_indexes)
+        # print("ordered_indexes from new added:",ordered_indexes)
         new_current_solutions = new_current_solutions[ordered_indexes[0:N]]
         new_current_fitnesses = new_current_fitnesses[ordered_indexes[0:N]]
-        print("new_current_solutions POST POST:",new_current_solutions)
-        print("new_current_fitnesses POST POST:",new_current_fitnesses)
+        # print("new_current_solutions POST POST:",new_current_solutions)
+        # print("new_current_fitnesses POST POST:",new_current_fitnesses)
         
         # Si los nuevos N mejores son iguales que los viejos N mejores, no ha habido mejora, terminar
         if np.all(new_current_solutions == current_solutions):
             mejora = False
         else:
             current_solutions = new_current_solutions
-            print("current_solutions updated:",current_solutions)
+            # print("current_solutions updated:",current_solutions)
 
+
+    ordered_indexes = np.argsort(vecindad_fitnesses)
     if verbose:
-        print("Ejecución terminada!\nEvaluations used: {}, time used: {}, best_fitness: {}".format(n_eval,round(total_time,2),current_fitnesses))
-            
-    
-    
-    print(initial_solutions)
+        print("Ejecución terminada!\nEvaluations used: {}, time used: {}, best_fitness: {}".format(n_eval,round(total_time,2),current_fitnesses[ordered_indexes]))
+
+    return current_fitnesses[ordered_indexes],current_solutions[ordered_indexes],n_eval,total_time
+

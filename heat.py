@@ -1,5 +1,6 @@
 import sys
 import time as tm
+import numpy as np
 sys.path.append("lib")
 import lib.io
 import lib.check
@@ -9,6 +10,7 @@ import lib.vecindades
 import lib.visualize
 import lib.busquedas
 import lib.neighbor_selector
+import lib.poblacionales
 
 # Probar io
 input_filepath = "data/input2"
@@ -81,6 +83,28 @@ def probar_neighbor_selectors():
     print("Best greedy :",lib.neighbor_selector.best_greedy (instance,vecindad_1,1,1000,rand_sol,fitness_value,fitness_lib))
     print("Random neigh:",lib.neighbor_selector.random_neigh(instance,vecindad_1,1,1000,rand_sol,fitness_value,fitness_lib))
     
+def probar_cross_over():
+    # creamos una población de 10 elementos
+    N = 10
+    pobl = [lib.solutions.random_solution(instance) for i in range(N)]
+    print("pobl:\n",pobl)
+    M = 10
+    proportion = -1
+    print("Generamos {} cruces con la porporción {}".format(M,proportion))
+    generados = lib.vecindades.cross_over(instance,pobl,M,proportion)
+    print("Generados:\n",generados)
+    
+def probar_mutacion_general():
+    N = 5
+    pobl = [lib.solutions.random_solution(instance) for i in range(N)]
+    pobl = np.array(pobl)
+    print("pobl:\n",pobl)
+    M = 5
+    print("Generamos {} mutaciones".format(M))
+    generados = lib.vecindades.mutacion_general(instance,pobl,M)
+    print("Generados:\n",generados)
+    print("pobl:\n",pobl)
+    
 # ejec_sol_inicial()
 # probar_rand_sol()
 # probar_vecindades()
@@ -89,4 +113,8 @@ def probar_neighbor_selectors():
 # probar_neighbor_selectors()
 
 # lib.busquedas.local_search(instance,lib.solutions.constructive_solution,10000000,lib.neighbor_selector.best_first,lib.vecindades.move_1,18000,True)
-lib.busquedas.local_beam_search(instance,lib.solutions.random_solution,1000000,5,lib.vecindades.move_1,3600,True)
+# lib.busquedas.local_beam_search(instance,lib.solutions.random_solution,1000000,5,lib.vecindades.move_1,3600,True)
+
+# probar_cross_over()
+# probar_mutacion_general()
+
