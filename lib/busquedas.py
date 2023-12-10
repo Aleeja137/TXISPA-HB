@@ -104,6 +104,7 @@ def local_beam_search (instance, initial_solution_function, max_eval, N, vecinda
         vecindad_fitnesses = np.empty(len(vecindad))
         if verbose:
             print("Total of {} unique neighbors generated".format(len(vecindad)))
+            
         for i in range(len(vecindad)):
             if verbose and i%(len(vecindad)//10) == 0:
                 print("Calculating objective function ({}/{}) ...".format(i,len(vecindad)))
@@ -131,9 +132,9 @@ def local_beam_search (instance, initial_solution_function, max_eval, N, vecinda
         
         # Se cogen los N mejores de la unión
         ordered_indexes = np.argsort(new_current_fitnesses)
-        # print("ordered_indexes from new added:",ordered_indexes)
         new_current_solutions = new_current_solutions[ordered_indexes[0:N]]
         new_current_fitnesses = new_current_fitnesses[ordered_indexes[0:N]]
+        # print("ordered_indexes from new added:",ordered_indexes)
         # print("new_current_solutions POST POST:",new_current_solutions)
         # print("new_current_fitnesses POST POST:",new_current_fitnesses)
         
@@ -145,7 +146,7 @@ def local_beam_search (instance, initial_solution_function, max_eval, N, vecinda
             # print("current_solutions updated:",current_solutions)
 
 
-    ordered_indexes = np.argsort(vecindad_fitnesses)
+    ordered_indexes = np.argsort(current_fitnesses)
     if verbose:
         print("Ejecución terminada!\nEvaluations used: {}, time used: {}, best_fitness: {}".format(n_eval,round(total_time,2),current_fitnesses[ordered_indexes]))
 

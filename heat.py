@@ -105,6 +105,23 @@ def probar_mutacion_general():
     print("Generados:\n",generados)
     print("pobl:\n",pobl)
     
+def probar_eliminados_mutacion():
+    N = 50
+    pobl = [lib.solutions.random_solution(instance) for i in range(N)]
+    pobl = np.array(pobl)
+    
+    M = 50
+    repetitions = 1000
+    count_valid = 0
+    
+    for _ in range(repetitions):
+        generados = lib.vecindades.mutacion_general(instance,pobl,M)
+        for i in range(N):
+            if lib.check.valid_solution(instance,generados[i]):
+                count_valid += 1
+    
+    print("De {} individuos originales, con {} mutaciones, {} repeticiones, tasa de válidos: {}".format(N,M,repetitions,count_valid/(N*repetitions)))
+    
 # ejec_sol_inicial()
 # probar_rand_sol()
 # probar_vecindades()
@@ -117,4 +134,7 @@ def probar_mutacion_general():
 
 # probar_cross_over()
 # probar_mutacion_general()
+# probar_eliminados_mutacion()
 
+total_time,pobl,pobl_fit,gen = lib.poblacionales.genetic_algorithm(instance,lib.vecindades.cross_over,lib.vecindades.mutacion_general,max_time=300,max_generations=10,mut_chance=0.1,N=5,verbose=True)
+print("Spent {} seconds\nPobl:\n{}\nPobl_fitnesses:\n{}\nTook {} generations".format(total_time,pobl,pobl_fit,gen))

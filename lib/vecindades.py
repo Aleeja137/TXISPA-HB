@@ -63,18 +63,16 @@ def swap_2(instance, solucion):
     result = result.reshape(len(result)//(nchip*2),nchip*2)  
     return result
 
-def cross_over(instance,pobl,M,proportion = -1):
+def cross_over(instance,pobl,M,proportion = -1, verbose = False):
     # Genera cruces aleatorios entre pares de soluciones, genera M cruces válidos
     scale,nconf,nchip,max_iter,n_pos,t_ext,tmax_chip,t_delta,tam,chip_info = instance
-    aux = np.random.choice(len(pobl),size=2*M)
-    result = pobl
-    
+    result = np.empty((M,2*nchip),dtype=np.int32)
     i = 0
     intentos = 0
     while i<M:
         # Se obtienen los elementos a cruzar
-        elem1 = aux[2*i]
-        elem2 = aux[2*i+1]
+        elem1 = np.random.choice(len(pobl))
+        elem2 = np.random.choice(len(pobl))
         
         # Se calcula la proporción del cruce
         if proportion == -1:
@@ -95,13 +93,19 @@ def cross_over(instance,pobl,M,proportion = -1):
         
         tmp_result = np.concatenate([pobl[elem1][0:percentage],pobl[elem2][percentage:]])
         intentos += 1
+            
+        # print("solution is valid:",check.valid_solution(instance,tmp_result))
+        # print("solution is already in result list:",any(np.array_equal(row, tmp_result) for row in result))
+        
+        # if check.valid_solution(instance,tmp_result) and not any(np.array_equal(row, tmp_result) for row in result):
         if check.valid_solution(instance,tmp_result):
             # print(check.valid_solution(instance,tmp_result))
             # print("\n")
             result[i] = tmp_result
             i += 1
             
-    print("Para generar {} cruces válidos han hecho falta {} intentos".format(M,intentos))
+    if verbose:
+        print("Para generar {} cruces válidos han hecho falta {} intentos".format(M,intentos))
     return result
         
 def mutacion_general(instance, pobl, M):
