@@ -44,7 +44,7 @@ def move_1 (instance, solucion):
 
 def swap_2(instance, solucion):
     scale,nconf,nchip,max_iter,n_pos,t_ext,tmax_chip,t_delta,tam,chip_info = instance
-    result = np.empty(0)
+    result = np.empty(0,dtype=np.int32)
 
     for i in range(nchip):
         for j in range(i + 1, nchip):

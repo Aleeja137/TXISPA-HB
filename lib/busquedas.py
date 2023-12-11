@@ -152,3 +152,118 @@ def local_beam_search (instance, initial_solution_function, max_eval, N, vecinda
 
     return current_fitnesses[ordered_indexes],current_solutions[ordered_indexes],n_eval,total_time
 
+def vnd(instance, initial_solution_function, max_eval, neighbor_selector_function, primary_vecindad_function, secondary_vecindad_function, max_time, verbose = False):
+    if verbose:
+        print("Función para solución inicial elegida: {}\n"
+              "Función primaria para generar vecindad elegida: {}\n"
+              "Función secundaria para generar vecindad elegida: {}\n"
+              "Función para elegir vecino siguiente elegida: {}\n"
+              .format(initial_solution_function.__name__,primary_vecindad_function.__name__,secondary_vecindad_function.__name__,neighbor_selector_function.__name__))
+        
+    # Obtener solución inicial
+    initial_sol = initial_solution_function(instance)
+    mejora = True
+    
+    # Calcular punto de partida
+    fitness_lib = objfunc.initialize_fitness()
+    _, fitness_value, fitness_time = objfunc.fitness_heat(fitness_lib,"",instance,initial_sol)
+    n_eval = 1
+    
+    current_sol = initial_sol
+    current_fitness = fitness_value
+    total_time = fitness_time
+    
+    # Mientras no sobrepasen las iteraciones, se encuentre mejora o no se sobrepase el tiempo de ejecución
+    while n_eval < max_eval and mejora and total_time < max_time:
+        
+        if verbose:
+            print("Evaluations used: {}, time used: {}, best_fitness: {}".format(n_eval,round(total_time,2),current_fitness))
+            
+        # Se obtiene la vecindad según función elegida
+        vecindad = primary_vecindad_function(instance,current_sol)
+
+        # Se recorren los vecinos según función elegida
+        encontrado,used_eval,best_fitness,best_candidato,used_time = neighbor_selector_function(instance,vecindad,n_eval,max_eval,current_sol,current_fitness,fitness_lib)
+        
+        total_time += used_time
+        n_eval     += used_eval
+        
+        # Si no se ha encontrado un vecino que mejore, se prueba la otra función de vecindad
+        if not encontrado:
+            if verbose:
+                print("Used secondary neighbor function {}".format(secondary_vecindad_function.__name__))
+            vecindad = secondary_vecindad_function(instance,current_sol)
+            encontrado,used_eval,best_fitness,best_candidato,used_time = neighbor_selector_function(instance,vecindad,n_eval,max_eval,current_sol,current_fitness,fitness_lib)
+            total_time += used_time
+            n_eval     += used_eval
+            
+            # Si aún no hay uno mejor, se abandona la búsqueda
+            if not encontrado:
+                mejora = False
+
+        # Si se ha encontrado un mejor vecino, se sigue por ese
+        current_sol = best_candidato
+        current_fitness = best_fitness
+
+    if verbose:
+        print("Ejecución terminada!\nEvaluations used: {}, time used: {}, best_fitness: {}".format(n_eval,round(total_time,2),current_fitness))
+            
+    return current_fitness,current_sol,n_eval,total_time
+
+def vns(instance, initial_solution_function, max_eval, neighbor_selector_function, primary_vecindad_function, secondary_vecindad_function, max_time, verbose = False):
+    if verbose:
+        print("Función para solución inicial elegida: {}\n"
+              "Función primaria para generar vecindad elegida: {}\n"
+              "Función secundaria para generar vecindad elegida: {}\n"
+              "Función para elegir vecino siguiente elegida: {}\n"
+              .format(initial_solution_function.__name__,primary_vecindad_function.__name__,secondary_vecindad_function.__name__,neighbor_selector_function.__name__))
+        
+    # Obtener solución inicial
+    initial_sol = initial_solution_function(instance)
+    mejora = True
+    
+    # Calcular punto de partida
+    fitness_lib = objfunc.initialize_fitness()
+    _, fitness_value, fitness_time = objfunc.fitness_heat(fitness_lib,"",instance,initial_sol)
+    n_eval = 1
+    
+    current_sol = initial_sol
+    current_fitness = fitness_value
+    total_time = fitness_time
+    
+    # Mientras no sobrepasen las iteraciones, se encuentre mejora o no se sobrepase el tiempo de ejecución
+    while n_eval < max_eval and mejora and total_time < max_time:
+        
+        if verbose:
+            print("Evaluations used: {}, time used: {}, best_fitness: {}".format(n_eval,round(total_time,2),current_fitness))
+            
+        # Se obtiene la vecindad según función elegida
+        vecindad = primary_vecindad_function(instance,current_sol)
+
+        # Se recorren los vecinos según función elegida
+        encontrado,used_eval,best_fitness,best_candidato,used_time = neighbor_selector_function(instance,vecindad,n_eval,max_eval,current_sol,current_fitness,fitness_lib)
+        
+        total_time += used_time
+        n_eval     += used_eval
+        
+        # Si no se ha encontrado un vecino que mejore, se prueba la otra función de vecindad
+        if not encontrado:
+            if verbose:
+                print("Used secondary neighbor function {}".format(secondary_vecindad_function.__name__))
+            vecindad = secondary_vecindad_function(instance,np.random.choice(vecindad))
+            encontrado,used_eval,best_fitness,best_candidato,used_time = neighbor_selector_function(instance,vecindad,n_eval,max_eval,current_sol,current_fitness,fitness_lib)
+            total_time += used_time
+            n_eval     += used_eval
+            
+            # Si aún no hay uno mejor, se abandona la búsqueda
+            if not encontrado:
+                mejora = False
+
+        # Si se ha encontrado un mejor vecino, se sigue por ese
+        current_sol = best_candidato
+        current_fitness = best_fitness
+
+    if verbose:
+        print("Ejecución terminada!\nEvaluations used: {}, time used: {}, best_fitness: {}".format(n_eval,round(total_time,2),current_fitness))
+            
+    return current_fitness,current_sol,n_eval,total_time

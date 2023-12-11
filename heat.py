@@ -136,5 +136,11 @@ def probar_eliminados_mutacion():
 # probar_mutacion_general()
 # probar_eliminados_mutacion()
 
-total_time,pobl,pobl_fit,gen = lib.poblacionales.genetic_algorithm(instance,lib.vecindades.cross_over,lib.vecindades.mutacion_general,max_time=300,max_generations=10,mut_chance=0.1,N=5,verbose=True)
-print("Spent {} seconds\nPobl:\n{}\nPobl_fitnesses:\n{}\nTook {} generations".format(total_time,pobl,pobl_fit,gen))
+# total_time,pobl,pobl_fit,gen = lib.poblacionales.genetic_algorithm(instance,lib.vecindades.cross_over,lib.vecindades.mutacion_general,max_time=300,max_generations=10,mut_chance=0.1,N=5,verbose=True)
+# print("Spent {} seconds\nPobl:\n{}\nPobl_fitnesses:\n{}\nTook {} generations".format(total_time,pobl,pobl_fit,gen))
+
+best_fitness,best_sol,n_eval,total_time = lib.busquedas.vnd(instance,lib.solutions.random_solution,10000,lib.neighbor_selector.best_greedy,lib.vecindades.swap_2,lib.vecindades.move_1,6000,True)
+print("VND - Spent {} seconds\nbest_sol:\n{}\nbest_sol_fitness:\n{}\nTook {} evaluations".format(total_time,best_sol,best_fitness,n_eval))
+
+best_fitness,best_sol,n_eval,total_time = lib.busquedas.vns(instance,lib.solutions.random_solution,10000,lib.neighbor_selector.best_greedy,lib.vecindades.swap_2,lib.vecindades.move_1,6000,True)
+print("VNS - Spent {} seconds\nbest_sol:\n{}\nbest_sol_fitness:\n{}\nTook {} evaluations".format(total_time,best_sol,best_fitness,n_eval))
