@@ -1,30 +1,33 @@
 # TXISPA-HB  
 Heurísticos de Búsqueda sobre el problema de distribución de chips en una placa. Los chips generan calor, y la placa se enfría en el centro. Se busca la temperatura media más baja.  
   
-# Implementación actual  
-Vecindades  
-Random Search  
-Best first (búsqueda local viene casi hecho con esto)  
-Visualizar placa  
+# Implementación actual    
+Local search y random_search  
+Local beam search  
+Genetic Algorithm  
+Simulated annealing  
+VNS/VND  
+  
+Vecindades move_1 y swap_2  
+Poblacional cross_over y mutación  
+  
+Función objetivo secundaria con manhattan distance  
+  
+Neighbor selectors de best_firts, best_greedy y random  
+  
+Visualizar placa   
 Fución objetivo  
 Todo hecho intentando seguir una estructura modular, viendo de cara al futuro  
 
 # Compilar código C como librería  
 gcc -shared -o fitness.so -fPIC fitness.c diffusion.c faux.c -lrt  
   
-# TODO    
-Arreglar memory corruption (C free)   (Trabajando en ello con valgrind y gdb)
-  
 # Mejoras planeadas    
 ## Mejoras principales  
-Local Beam search  
 Random restart local search (OpenMP/Python multiprocessing)  
-Poblacionales (differential evolution and/or genetic algorithm)  
-Solución inicial parecido a GRASP (poniendo los más grandes/más calientes en el cooling zone)  
-Función objetivo secundaria (wirelength) para pareto (parecido al lab)  
-VNS ya que la temperatura media cambia poco con vecindad move_1  
-Simulated annealing para Insertar individuos aleatorios (parecido al lab)  
-
+Simulated annealing para Insertar individuos aleatorios en Pareto (parecido al lab)  
+Una especie de Tabu Search para evitar ejecutar la función objetivo en soluciones ya visitadas (en cualquier búsqueda)  
+  
 ## Mejoras secundarias  
 Visualizar recorrido en las búsquedas (vídeo/GIF)  
 Visualizar zonas de enfriamiento  
