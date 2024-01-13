@@ -1,7 +1,6 @@
 import sys
 import time as tm
 import numpy as np
-sys.path.append("lib")
 import lib.io
 import lib.check
 import lib.objfunc
@@ -11,6 +10,8 @@ import lib.visualize
 import lib.busquedas
 import lib.neighbor_selector
 import lib.poblacionales
+
+sys.path.append("lib")
 
 # Probar io
 input_filepath = "data/input2"
@@ -41,7 +42,6 @@ def probar_rand_sol():
     print(rand_sol)
     lib.visualize.visualizar_solucion(instance,rand_sol)    
         
-
 # Probar vecindades
 def probar_vecindades():
     rand_sol = lib.solutions.random_solution(instance)
@@ -126,7 +126,7 @@ def probar_eliminados_mutacion():
 # probar_rand_sol()
 # probar_vecindades()
 # probar_random_search(verbose=True)
-# lib.solutions.constructive_solution(instance)
+lib.solutions.constructive_solution(instance, debug = True)
 # probar_neighbor_selectors()
 
 # lib.busquedas.local_search(instance,lib.solutions.constructive_solution,10000000,lib.neighbor_selector.best_first,lib.vecindades.move_1,18000,True)
@@ -145,5 +145,5 @@ def probar_eliminados_mutacion():
 # best_fitness,best_sol,n_eval,total_time = lib.busquedas.vns(instance,lib.solutions.random_solution,10000,lib.neighbor_selector.best_greedy,lib.vecindades.swap_2,lib.vecindades.move_1,6000,True)
 # print("VNS - Spent {} seconds\nbest_sol:\n{}\nbest_sol_fitness:\n{}\nTook {} evaluations".format(total_time,best_sol,best_fitness,n_eval))
 
-best_fitness,best_sol,n_eval,total_time = lib.busquedas.simulated_annealing(instance,lib.solutions.random_solution,10000,lib.neighbor_selector.best_greedy,lib.vecindades.swap_2,600,True)
-print("Simulated annealing - Spent {} seconds\nbest_sol:\n{}\nbest_sol_fitness:\n{}\nTook {} evaluations".format(total_time,best_sol,best_fitness,n_eval))
+# best_fitness,best_sol,n_eval,total_time = lib.busquedas.simulated_annealing(instance,lib.solutions.random_solution,10000,lib.neighbor_selector.best_greedy,lib.vecindades.swap_2,600,True)
+# print("Simulated annealing - Spent {} seconds\nbest_sol:\n{}\nbest_sol_fitness:\n{}\nTook {} evaluations".format(total_time,best_sol,best_fitness,n_eval))

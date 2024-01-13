@@ -1,8 +1,8 @@
 import numpy as np
-import solutions
-import vecindades
-import objfunc
-import check
+import lib.solutions
+import lib.vecindades
+import lib.objfunc
+import lib.check
 import sys
 
 def genetic_algorithm(instance, cross_function, mutation_function, max_time, max_generations, mut_chance, N, verbose = False):
@@ -15,16 +15,16 @@ def genetic_algorithm(instance, cross_function, mutation_function, max_time, max
               "Poblation size: {}\n"
               .format(cross_function.__name__,mutation_function.__name__,max_time,max_generations,mut_chance,N))
     
-    fitness_lib = objfunc.initialize_fitness()
+    fitness_lib = lib.objfunc.initialize_fitness()
     total_time = 0
     
     # Crear población inicial
-    pobl = [solutions.random_solution(instance) for i in range(N)]
+    pobl = [lib.solutions.random_solution(instance) for i in range(N)]
     pobl = np.array(pobl)
     pobl_fitness = np.empty(N)
     
     for i in range(N):
-        _,new_fitness,new_time = objfunc.fitness_heat(fitness_lib,"",instance,pobl[i])
+        _,new_fitness,new_time = lib.objfunc.fitness_heat(fitness_lib,"",instance,pobl[i])
         pobl_fitness[i] = new_fitness
         total_time += new_time
     
@@ -35,7 +35,7 @@ def genetic_algorithm(instance, cross_function, mutation_function, max_time, max
             print("\033[1;34mGeneration {}\033[0m, total time {}s, pobl:\n{}\npobl_fitnesses:\n{}".format(iter,round(total_time,2),pobl,pobl_fitness))
             
         # Crea la siguiente generación
-        next_pobl = vecindades.cross_over(instance,pobl,N, verbose=verbose)
+        next_pobl = lib.vecindades.cross_over(instance,pobl,N, verbose=verbose)
         
         # Aplicar mutación a la nueva generación
         dice = np.random.random_sample()
@@ -48,8 +48,8 @@ def genetic_algorithm(instance, cross_function, mutation_function, max_time, max
         next_pobl_fitness = np.empty(N)
         not_valid_count = 0
         for i in range(N):
-            if check.valid_solution(instance,next_pobl[i]):
-                _,new_fitness,new_time = objfunc.fitness_heat(fitness_lib,"",instance,next_pobl[i])
+            if lib.check.valid_solution(instance,next_pobl[i]):
+                _,new_fitness,new_time = lib.objfunc.fitness_heat(fitness_lib,"",instance,next_pobl[i])
                 next_pobl_fitness[i] = new_fitness
                 total_time += new_time
             else:

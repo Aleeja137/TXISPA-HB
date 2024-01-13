@@ -1,4 +1,4 @@
-import objfunc
+import lib.objfunc
 import sys
 import numpy as np
 
@@ -13,7 +13,7 @@ def best_first(instance, vecindad, n_eval, max_eval, candidato, fitness_candidat
     
     # Se recorren los vecinos hasta encontrar el primero que lo mejore
     while sol_ind < len(vecindad) and not encontrado and n_eval < max_eval:
-        _,new_fitness,new_time = objfunc.fitness_heat(objective_function_HEAT,"",instance,vecindad[sol_ind])
+        _,new_fitness,new_time = lib.objfunc.fitness_heat(objective_function_HEAT,"",instance,vecindad[sol_ind])
         total_time += new_time
         n_eval += 1
         if new_fitness < fitness_candidato:
@@ -37,7 +37,7 @@ def best_greedy(instance, vecindad, n_eval, max_eval, candidato, fitness_candida
 
     # Evalúa TODOS los vecinos y se queda con el mejor
     while sol_ind < len(vecindad) and n_eval < max_eval:
-        _,new_fitness,new_time = objfunc.fitness_heat(objective_function_HEAT,"",instance,vecindad[sol_ind])
+        _,new_fitness,new_time = lib.objfunc.fitness_heat(objective_function_HEAT,"",instance,vecindad[sol_ind])
         total_time += new_time
         n_eval += 1
         if new_fitness < best_fitness:
@@ -62,7 +62,7 @@ def random_neigh(instance, vecindad, n_eval, max_eval, candidato, fitness_candid
     best_fitness = fitness_candidato
     best_candidato = candidato
     
-    _,new_fitness,new_time = objfunc.fitness_heat(objective_function_HEAT,"",instance,vecindad[rand_neigh_index,:])
+    _,new_fitness,new_time = lib.objfunc.fitness_heat(objective_function_HEAT,"",instance,vecindad[rand_neigh_index,:])
     
     if new_fitness < best_fitness:
         encontrado = True

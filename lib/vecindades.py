@@ -1,6 +1,6 @@
 import numpy as np
 import itertools
-import check
+import lib.check
 
 def move_1 (instance, solucion):
     scale,nconf,nchip,max_iter,n_pos,t_ext,tmax_chip,t_delta,tam,chip_info = instance
@@ -57,7 +57,7 @@ def swap_2(instance, solucion):
             vecino_swap[2*i+1], vecino_swap[2*j+1] = vecino_swap[2*j+1], vecino_swap[2*i+1]
 
             # Verificar si la solución resultante es válida
-            if check.valid_solution(instance,vecino_swap):
+            if lib.check.valid_solution(instance,vecino_swap):
                 result = np.append(result,vecino_swap.copy())
 
     result = result.reshape(len(result)//(nchip*2),nchip*2)  
@@ -94,12 +94,12 @@ def cross_over(instance,pobl,M,proportion = -1, verbose = False):
         tmp_result = np.concatenate([pobl[elem1][0:percentage],pobl[elem2][percentage:]])
         intentos += 1
             
-        # print("solution is valid:",check.valid_solution(instance,tmp_result))
+        # print("solution is valid:",lib.check.valid_solution(instance,tmp_result))
         # print("solution is already in result list:",any(np.array_equal(row, tmp_result) for row in result))
         
-        # if check.valid_solution(instance,tmp_result) and not any(np.array_equal(row, tmp_result) for row in result):
-        if check.valid_solution(instance,tmp_result):
-            # print(check.valid_solution(instance,tmp_result))
+        # if lib.check.valid_solution(instance,tmp_result) and not any(np.array_equal(row, tmp_result) for row in result):
+        if lib.check.valid_solution(instance,tmp_result):
+            # print(lib.check.valid_solution(instance,tmp_result))
             # print("\n")
             result[i] = tmp_result
             i += 1

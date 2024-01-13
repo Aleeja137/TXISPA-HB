@@ -34,7 +34,7 @@ Visualizar zonas de enfriamiento
 Visualizar calor placa cada iteración con el mejor candidato  
 
 # Debugging  
-conda activate /path/to/HB-env
-cd source
-gcc -o fitness  fitness.c diffusion.c faux.c 
-valgrind -v --leak-check=full ./fitness
+conda activate /path/to/HB-env  
+cd source  
+gcc -o fitness  fitness.c diffusion.c faux.c   
+valgrind -v --leak-check=full ./fitness    

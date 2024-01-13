@@ -1,7 +1,7 @@
-import solutions
-import objfunc
-import vecindades
-import neighbor_selector
+import lib.solutions
+import lib.objfunc
+import lib.vecindades
+import lib.neighbor_selector
 import numpy as np
 import math
 
@@ -18,8 +18,8 @@ def local_search(instance, initial_solution_function, max_eval, neighbor_selecto
     mejora = True
     
     # Calcular punto de partida
-    fitness_lib = objfunc.initialize_fitness()
-    _, fitness_value, fitness_time = objfunc.fitness_heat(fitness_lib,"",instance,initial_sol)
+    fitness_lib = lib.objfunc.initialize_fitness()
+    _, fitness_value, fitness_time = lib.objfunc.fitness_heat(fitness_lib,"",instance,initial_sol)
     n_eval = 1
     
     current_sol = initial_sol
@@ -72,9 +72,9 @@ def local_beam_search (instance, initial_solution_function, max_eval, N, vecinda
     current_solutions = initial_solutions
     total_time = 0
     
-    fitness_lib = objfunc.initialize_fitness()
+    fitness_lib = lib.objfunc.initialize_fitness()
     for i in range(N):
-        _, fitness_value, fitness_time = objfunc.fitness_heat(fitness_lib,"",instance,initial_solutions[i])
+        _, fitness_value, fitness_time = lib.objfunc.fitness_heat(fitness_lib,"",instance,initial_solutions[i])
         total_time += fitness_time
         current_fitnesses[i] = fitness_value
     
@@ -109,7 +109,7 @@ def local_beam_search (instance, initial_solution_function, max_eval, N, vecinda
         for i in range(len(vecindad)):
             if verbose and i%(len(vecindad)//10) == 0:
                 print("Calculating objective function ({}/{}) ...".format(i,len(vecindad)))
-            _, fitness_value, fitness_time = objfunc.fitness_heat(fitness_lib,"",instance,vecindad[i])
+            _, fitness_value, fitness_time = lib.objfunc.fitness_heat(fitness_lib,"",instance,vecindad[i])
             total_time += fitness_time
             vecindad_fitnesses[i] = fitness_value
             
@@ -166,8 +166,8 @@ def vnd(instance, initial_solution_function, max_eval, neighbor_selector_functio
     mejora = True
     
     # Calcular punto de partida
-    fitness_lib = objfunc.initialize_fitness()
-    _, fitness_value, fitness_time = objfunc.fitness_heat(fitness_lib,"",instance,initial_sol)
+    fitness_lib = lib.objfunc.initialize_fitness()
+    _, fitness_value, fitness_time = lib.objfunc.fitness_heat(fitness_lib,"",instance,initial_sol)
     n_eval = 1
     
     current_sol = initial_sol
@@ -224,8 +224,8 @@ def vns(instance, initial_solution_function, max_eval, neighbor_selector_functio
     mejora = True
     
     # Calcular punto de partida
-    fitness_lib = objfunc.initialize_fitness()
-    _, fitness_value, fitness_time = objfunc.fitness_heat(fitness_lib,"",instance,initial_sol)
+    fitness_lib = lib.objfunc.initialize_fitness()
+    _, fitness_value, fitness_time = lib.objfunc.fitness_heat(fitness_lib,"",instance,initial_sol)
     n_eval = 1
     
     current_sol = initial_sol
@@ -284,8 +284,8 @@ def simulated_annealing(instance, initial_solution_function, max_eval, neighbor_
     mejora = True
     
     # Calcular punto de partida
-    fitness_lib = objfunc.initialize_fitness()
-    _, fitness_value, fitness_time = objfunc.fitness_heat(fitness_lib,"",instance,initial_sol)
+    fitness_lib = lib.objfunc.initialize_fitness()
+    _, fitness_value, fitness_time = lib.objfunc.fitness_heat(fitness_lib,"",instance,initial_sol)
     n_eval = 1
     
     current_sol = initial_sol
@@ -313,7 +313,7 @@ def simulated_annealing(instance, initial_solution_function, max_eval, neighbor_
         if not encontrado:
             worse_sol_index = np.random.choice(len(vecindad))
             worse_sol = vecindad[worse_sol_index]
-            _,new_fitness,new_time = objfunc.fitness_heat(fitness_lib,"",instance,worse_sol)
+            _,new_fitness,new_time = lib.objfunc.fitness_heat(fitness_lib,"",instance,worse_sol)
             total_time += new_time
             n_eval += 1
             delta_E = -abs(new_fitness-current_fitness)
