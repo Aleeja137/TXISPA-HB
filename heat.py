@@ -12,10 +12,6 @@ import lib.neighbor_selector
 import lib.poblacionales
 
 sys.path.append("lib")
-
-# Probar io
-input_filepath = "data/input2"
-instance, initial_solution = lib.io.read_params(input_filepath)
     
 # Ejecución con solución inicial
 def ejec_sol_inicial():
@@ -37,10 +33,11 @@ def ejec_sol_inicial():
         print("Not a valid solution")
 
 # Probar random solution
-def probar_rand_sol():
+def probar_rand_sol(instance):
     rand_sol = lib.solutions.random_solution(instance)
     print(rand_sol)
     lib.visualize.visualizar_solucion(instance,rand_sol)    
+    return rand_sol
         
 # Probar vecindades
 def probar_vecindades():
@@ -122,11 +119,39 @@ def probar_eliminados_mutacion():
     
     print("De {} individuos originales, con {} mutaciones, {} repeticiones, tasa de válidos: {}".format(N,M,repetitions,count_valid/(N*repetitions)))
     
+def procesar_archivo(filepath):
+    print("Procesando", filepath)
+
+    try:
+        instance, initial_solution = lib.io.read_params(filepath)
+        rand_sol = probar_rand_sol(instance) 
+        
+        # Extraer las coordenadas de cada chip en rand_sol
+        coordenadas_chips = [(rand_sol[i], rand_sol[i+1]) for i in range(0, len(rand_sol), 2)]
+
+        # Escribir las coordenadas al final del archivo
+        with open(filepath, 'a') as file:
+            file.write('\n')  # Línea en blanco
+            for i, j in coordenadas_chips:
+                file.write(f"{i} {j}\n")
+
+    except FileNotFoundError:
+        print(f"¡Error! El archivo {filepath} no fue encontrado.")
+    except Exception as e:
+        print(f"¡Error! Ocurrió un problema al procesar el archivo {filepath}: {str(e)}")
+
+for i in range(1,6):
+    for j in range(1,6):
+        input_filepath = "data/benchmark_{}_{}.dat".format(i,j)
+        instance, initial_solution = lib.io.read_params(input_filepath)
+        lib.visualize.visualizar_solucion(instance,initial_solution)
+        print(lib.check.valid_solution(instance,initial_solution))
+        
 # ejec_sol_inicial()
 # probar_rand_sol()
 # probar_vecindades()
 # probar_random_search(verbose=True)
-lib.solutions.constructive_solution(instance, debug = True)
+# lib.solutions.constructive_solution(instance, debug = True)
 # probar_neighbor_selectors()
 
 # lib.busquedas.local_search(instance,lib.solutions.constructive_solution,10000000,lib.neighbor_selector.best_first,lib.vecindades.move_1,18000,True)
@@ -147,3 +172,25 @@ lib.solutions.constructive_solution(instance, debug = True)
 
 # best_fitness,best_sol,n_eval,total_time = lib.busquedas.simulated_annealing(instance,lib.solutions.random_solution,10000,lib.neighbor_selector.best_greedy,lib.vecindades.swap_2,600,True)
 # print("Simulated annealing - Spent {} seconds\nbest_sol:\n{}\nbest_sol_fitness:\n{}\nTook {} evaluations".format(total_time,best_sol,best_fitness,n_eval))
+
+initial_solution = [0,0,    0,0,    0,0,    0,0,    0,0, 
+                    0,0,    0,0,    0,0,    0,0,    0,0,
+                    
+                    0,0,    0,0,    0,0,    0,0,    0,0, 
+                    0,0,    0,0,    0,0,    0,0,    0,0,
+                    
+                    0,0,    0,0,    0,0,    0,0,    0,0, 
+                    0,0,    0,0,    0,0,    0,0,    0,0,
+                    
+                    0,0]
+
+initial_solution = [400,10,    400,50,    400,90,    400,130,    400,170, 
+                    350,0,    350,60,    350,120,    350,180,    350,240,
+                    
+                    275,0,    275,50,    275,100,    275,150,    275,200, 
+                    0,0,      0,60,      0,120,      0,180,      0,240,
+                    
+                    200,0,    200,60,    200,120,    200,180,    200,240, 
+                    100,0,    100,40,    100,80,     100,120,    100,160,
+                    
+                    75, 200]
