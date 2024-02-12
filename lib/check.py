@@ -1,8 +1,11 @@
 import numpy as np
 
-def valid_solution(instance, solution):
+def valid_solution(instance, solution, nchip_analizar = -1):
     scale,nconf,nchip,max_iter,n_pos,t_ext,tmax_chip,t_delta,tam,chip_info = instance
-    
+
+    if nchip_analizar != -1:
+        nchip = nchip_analizar
+        
     if np.all(solution == 0):
         return False
     

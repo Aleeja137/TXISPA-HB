@@ -38,6 +38,13 @@ def probar_rand_sol(instance):
     print(rand_sol)
     lib.visualize.visualizar_solucion(instance,rand_sol)    
     return rand_sol
+
+# Probar random solution constructiva
+def probar_rand_sol_cons(instance):
+    rand_sol = lib.solutions.random_solution_constructive(instance)
+    print(rand_sol)
+    lib.visualize.visualizar_solucion(instance,rand_sol)    
+    return rand_sol
         
 # Probar vecindades
 def probar_vecindades():
@@ -143,12 +150,13 @@ def procesar_archivo(filepath):
 for i in range(1,6):
     for j in range(1,6):
         input_filepath = "data/benchmark_{}_{}.dat".format(i,j)
+        print("Procesando data/benchmark_{}_{}.dat".format(i,j))
         instance, initial_solution = lib.io.read_params(input_filepath)
+        # initial_solution = probar_rand_sol_cons(instance)
         lib.visualize.visualizar_solucion(instance,initial_solution)
         print(lib.check.valid_solution(instance,initial_solution))
         
 # ejec_sol_inicial()
-# probar_rand_sol()
 # probar_vecindades()
 # probar_random_search(verbose=True)
 # lib.solutions.constructive_solution(instance, debug = True)

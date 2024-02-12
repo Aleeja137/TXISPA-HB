@@ -23,6 +23,25 @@ def random_solution(instance):
             
     return solution
 
+def random_solution_constructive(instance):
+    scale,nconf,nchip,max_iter,n_pos,t_ext,tmax_chip,t_delta,tam,chip_info = instance
+    solution = np.zeros(nchip*2,dtype=np.int32)
+    
+    i = 0
+    while i < nchip:        
+        valid = False
+        while not valid:
+            y = rm.randint(0,n_pos*2)
+            x = rm.randint(0,n_pos)
+            
+            solution[i*2]   = y
+            solution[i*2+1] = x
+            valid = lib.check.valid_solution(instance,solution,nchip_analizar=i+1)
+            # lib.visualize.visualizar_solucion(instance,solution)
+        i += 1
+        
+    return solution
+
 def constructive_solution_inverse(instance):
     # Va generando la solución poniendo los chips más calientes en la zona de refrigeración
     scale,nconf,nchip,max_iter,n_pos,t_ext,tmax_chip,t_delta,tam,chip_info = instance
