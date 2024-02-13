@@ -38,7 +38,7 @@ def move_1 (instance, solucion):
     result = result.reshape(len(result)//(nchip*2),nchip*2)  
     
     # Filtrar las soluciones no válidas
-    result = result[[check.valid_solution(instance,x) for x in result]]
+    result = result[[lib.check.valid_solution(instance,x) for x in result]]
     
     return result
 

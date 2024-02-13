@@ -13,6 +13,35 @@ import lib.poblacionales
 
 sys.path.append("lib")
     
+dificultad_humana = [1,2,3,4,5]
+dificultad_cpu    = [1,2,3,4,5]
+
+dificultad_humana = [3,4,5]
+dificultad_cpu    = [5]
+
+print("Local Search algorithm, random_sol_constructive, best first, move_1")
+
+for i in dificultad_cpu:
+    for j in dificultad_humana:
+        input_filepath = "data/benchmark_{}_{}.dat".format(i,j)
+        print("Procesando data/benchmark_{}_{}.dat".format(i,j))
+        start_time = tm.time()
+        instance, initial_solution = lib.io.read_params(input_filepath)
+        result = lib.busquedas.local_search(instance = instance, 
+                                    initial_solution_function = lib.solutions.random_solution_constructive,
+                                    max_eval = 1, 
+                                    neighbor_selector_function = lib.neighbor_selector.best_first,
+                                    vecindad_function = lib.vecindades.move_1,
+                                    max_time = 3600,
+                                    verbose = False)
+        end_time = tm.time()
+        current_fitness,current_sol,n_eval,total_time = result
+        print("Best fitness:",current_fitness)
+        print("n_eval:",n_eval)
+        print("Time calculating:",total_time," , total time:",end_time-start_time)
+        print("Best sol:\n",current_sol,"\n")
+    
+"""
 # Ejecución con solución inicial
 def ejec_sol_inicial():
     input_filepath = "data/input1"
@@ -147,58 +176,38 @@ def procesar_archivo(filepath):
     except Exception as e:
         print(f"¡Error! Ocurrió un problema al procesar el archivo {filepath}: {str(e)}")
 
+
 for i in range(1,6):
     for j in range(1,6):
         input_filepath = "data/benchmark_{}_{}.dat".format(i,j)
         print("Procesando data/benchmark_{}_{}.dat".format(i,j))
         instance, initial_solution = lib.io.read_params(input_filepath)
         # initial_solution = probar_rand_sol_cons(instance)
-        lib.visualize.visualizar_solucion(instance,initial_solution)
+        # lib.visualize.visualizar_solucion(instance,initial_solution)
         print(lib.check.valid_solution(instance,initial_solution))
         
-# ejec_sol_inicial()
-# probar_vecindades()
-# probar_random_search(verbose=True)
-# lib.solutions.constructive_solution(instance, debug = True)
-# probar_neighbor_selectors()
+ejec_sol_inicial()
+probar_vecindades()
+probar_random_search(verbose=True)
+lib.solutions.constructive_solution(instance, debug = True)
+probar_neighbor_selectors()
 
-# lib.busquedas.local_search(instance,lib.solutions.constructive_solution,10000000,lib.neighbor_selector.best_first,lib.vecindades.move_1,18000,True)
-# lib.busquedas.local_beam_search(instance,lib.solutions.random_solution,1000000,5,lib.vecindades.move_1,3600,True)
+lib.busquedas.local_search(instance,lib.solutions.constructive_solution,10000000,lib.neighbor_selector.best_first,lib.vecindades.move_1,18000,True)
+lib.busquedas.local_beam_search(instance,lib.solutions.random_solution,1000000,5,lib.vecindades.move_1,3600,True)
 
-# probar_cross_over()
-# probar_mutacion_general()
-# probar_eliminados_mutacion()
+probar_cross_over()
+probar_mutacion_general()
+probar_eliminados_mutacion()
 
-# total_time,pobl,pobl_fit,gen = lib.poblacionales.genetic_algorithm(instance,lib.vecindades.cross_over,lib.vecindades.mutacion_general,max_time=300,max_generations=10,mut_chance=0.1,N=5,verbose=True)
-# print("Spent {} seconds\nPobl:\n{}\nPobl_fitnesses:\n{}\nTook {} generations".format(total_time,pobl,pobl_fit,gen))
+total_time,pobl,pobl_fit,gen = lib.poblacionales.genetic_algorithm(instance,lib.vecindades.cross_over,lib.vecindades.mutacion_general,max_time=300,max_generations=10,mut_chance=0.1,N=5,verbose=True)
+print("Spent {} seconds\nPobl:\n{}\nPobl_fitnesses:\n{}\nTook {} generations".format(total_time,pobl,pobl_fit,gen))
 
-# best_fitness,best_sol,n_eval,total_time = lib.busquedas.vnd(instance,lib.solutions.random_solution,10000,lib.neighbor_selector.best_greedy,lib.vecindades.swap_2,lib.vecindades.move_1,6000,True)
-# print("VND - Spent {} seconds\nbest_sol:\n{}\nbest_sol_fitness:\n{}\nTook {} evaluations".format(total_time,best_sol,best_fitness,n_eval))
+best_fitness,best_sol,n_eval,total_time = lib.busquedas.vnd(instance,lib.solutions.random_solution,10000,lib.neighbor_selector.best_greedy,lib.vecindades.swap_2,lib.vecindades.move_1,6000,True)
+print("VND - Spent {} seconds\nbest_sol:\n{}\nbest_sol_fitness:\n{}\nTook {} evaluations".format(total_time,best_sol,best_fitness,n_eval))
 
-# best_fitness,best_sol,n_eval,total_time = lib.busquedas.vns(instance,lib.solutions.random_solution,10000,lib.neighbor_selector.best_greedy,lib.vecindades.swap_2,lib.vecindades.move_1,6000,True)
-# print("VNS - Spent {} seconds\nbest_sol:\n{}\nbest_sol_fitness:\n{}\nTook {} evaluations".format(total_time,best_sol,best_fitness,n_eval))
+best_fitness,best_sol,n_eval,total_time = lib.busquedas.vns(instance,lib.solutions.random_solution,10000,lib.neighbor_selector.best_greedy,lib.vecindades.swap_2,lib.vecindades.move_1,6000,True)
+print("VNS - Spent {} seconds\nbest_sol:\n{}\nbest_sol_fitness:\n{}\nTook {} evaluations".format(total_time,best_sol,best_fitness,n_eval))
 
-# best_fitness,best_sol,n_eval,total_time = lib.busquedas.simulated_annealing(instance,lib.solutions.random_solution,10000,lib.neighbor_selector.best_greedy,lib.vecindades.swap_2,600,True)
-# print("Simulated annealing - Spent {} seconds\nbest_sol:\n{}\nbest_sol_fitness:\n{}\nTook {} evaluations".format(total_time,best_sol,best_fitness,n_eval))
-
-initial_solution = [0,0,    0,0,    0,0,    0,0,    0,0, 
-                    0,0,    0,0,    0,0,    0,0,    0,0,
-                    
-                    0,0,    0,0,    0,0,    0,0,    0,0, 
-                    0,0,    0,0,    0,0,    0,0,    0,0,
-                    
-                    0,0,    0,0,    0,0,    0,0,    0,0, 
-                    0,0,    0,0,    0,0,    0,0,    0,0,
-                    
-                    0,0]
-
-initial_solution = [400,10,    400,50,    400,90,    400,130,    400,170, 
-                    350,0,    350,60,    350,120,    350,180,    350,240,
-                    
-                    275,0,    275,50,    275,100,    275,150,    275,200, 
-                    0,0,      0,60,      0,120,      0,180,      0,240,
-                    
-                    200,0,    200,60,    200,120,    200,180,    200,240, 
-                    100,0,    100,40,    100,80,     100,120,    100,160,
-                    
-                    75, 200]
+best_fitness,best_sol,n_eval,total_time = lib.busquedas.simulated_annealing(instance,lib.solutions.random_solution,10000,lib.neighbor_selector.best_greedy,lib.vecindades.swap_2,600,True)
+print("Simulated annealing - Spent {} seconds\nbest_sol:\n{}\nbest_sol_fitness:\n{}\nTook {} evaluations".format(total_time,best_sol,best_fitness,n_eval))
+"""
