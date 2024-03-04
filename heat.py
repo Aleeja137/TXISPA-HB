@@ -10,38 +10,79 @@ import lib.visualize
 import lib.busquedas
 import lib.neighbor_selector
 import lib.poblacionales
+import lib.handlers
+import signal as sg
 
 sys.path.append("lib")
     
 dificultad_humana = [1,2,3,4,5]
 dificultad_cpu    = [1,2,3,4,5]
 
-dificultad_humana = [3,4,5]
-dificultad_cpu    = [5]
+max_time = 10
 
 print("Local Search algorithm, random_sol_constructive, best first, move_1")
+            
+def process_file(input_filepath, max_time):
+    sg.signal(sg.SIGALRM, lib.handlers.timeout_handler)
+    sg.alarm(1.1*max_time)
+    try:
+        start_time = tm.time()
+        instance, initial_solution = lib.io.read_params(input_filepath)
+        result = lib.busquedas.local_search(instance=instance, 
+                                            initial_solution_function=lib.solutions.random_solution_constructive, 
+                                            max_eval=1000000, 
+                                            neighbor_selector_function=lib.neighbor_selector.best_first, 
+                                            vecindad_function=lib.vecindades.move_1, 
+                                            max_time=max_time, 
+                                            verbose=False)
+        
+        end_time = tm.time()
+        current_fitness, current_sol, n_eval, total_time = result
+        print("Best fitness:", current_fitness)
+        print("n_eval:", n_eval)
+        print("Time calculating:", total_time, ", total time:", end_time - start_time)
+        print("Best sol:\n", current_sol, "\n")
+    except lib.handlers.TimeoutError as e:
+        print("Timeout!")
+        pass
+        
 
+# Código principal
+for i in dificultad_cpu:
+    for j in dificultad_humana:
+        input_filepath = "data/benchmark_{}_{}.dat".format(i, j)
+        print("Procesando data/benchmark_{}_{}.dat".format(i, j))
+        process_file(input_filepath, 3600)
+        sg.alarm(0)
+        
+    
+"""
 for i in dificultad_cpu:
     for j in dificultad_humana:
         input_filepath = "data/benchmark_{}_{}.dat".format(i,j)
         print("Procesando data/benchmark_{}_{}.dat".format(i,j))
-        start_time = tm.time()
-        instance, initial_solution = lib.io.read_params(input_filepath)
-        result = lib.busquedas.local_search(instance = instance, 
-                                    initial_solution_function = lib.solutions.random_solution_constructive,
-                                    max_eval = 1, 
-                                    neighbor_selector_function = lib.neighbor_selector.best_first,
-                                    vecindad_function = lib.vecindades.move_1,
-                                    max_time = 3600,
-                                    verbose = False)
-        end_time = tm.time()
-        current_fitness,current_sol,n_eval,total_time = result
-        print("Best fitness:",current_fitness)
-        print("n_eval:",n_eval)
-        print("Time calculating:",total_time," , total time:",end_time-start_time)
-        print("Best sol:\n",current_sol,"\n")
-    
-"""
+        sg.signal(sg.SIGALRM, lib.handlers.timeout_handler)
+        sg.alarm(max_time)
+        try:
+            
+            start_time = tm.time()
+            instance, initial_solution = lib.io.read_params(input_filepath)
+            result = lib.busquedas.local_search(instance = instance, 
+                                                initial_solution_function = lib.solutions.random_solution_constructive, 
+                                                max_eval = 1000000, 
+                                                neighbor_selector_function = lib.neighbor_selector.best_first, 
+                                                vecindad_function = lib.vecindades.move_1, 
+                                                max_time =  max_time, 
+                                                verbose = False)
+            
+            end_time = tm.time()
+            current_fitness,current_sol,n_eval,total_time = result
+            print("Best fitness:",current_fitness)
+            print("n_eval:",n_eval)
+            print("Time calculating:",total_time," , total time:",end_time-start_time)
+            print("Best sol:\n",current_sol,"\n")
+        except TimeoutError as e:
+            print("Timeout!")
 # Ejecución con solución inicial
 def ejec_sol_inicial():
     input_filepath = "data/input1"
